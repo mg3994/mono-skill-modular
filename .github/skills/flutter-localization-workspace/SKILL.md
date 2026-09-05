@@ -109,7 +109,7 @@ The template file is `packages/l10n/lib/l10n/app_en.arb`. It starts with the loc
 }
 ```
 
-The catalog currently defines these messages:
+The catalog currently defines these messages (for examples):
 
 | Message | Parameters | Purpose |
 | --- | --- | --- |
