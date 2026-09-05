@@ -1,6 +1,7 @@
 name: l10n
 description: A sample command-line application.
 version: 1.0.0
+publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 resolution: workspace
