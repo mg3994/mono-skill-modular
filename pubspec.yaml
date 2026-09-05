@@ -7,7 +7,7 @@ publish_to: none
 environment:
   sdk: ^3.14.0-95.2.beta
 workspace:
-  # - apps/**
+  - apps/**
   - packages/**
 
 # Add regular dependencies here.
@@ -17,8 +17,10 @@ dependencies:
   
 
 dev_dependencies:
+  build: ^4.0.7
   build_runner: ^2.15.1
-  drift: ^2.34.4
+  build_web_compilers: ^4.8.5
+  drift: ^2.34.4 # this is here because devtools_options.yaml has that extension - drift: true
   flutter_lints: 
   kaisel_lint: ^0.5.1
   
