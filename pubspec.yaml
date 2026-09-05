@@ -1,0 +1,24 @@
+name: workspace
+description: A sample command-line application.
+version: 1.0.0
+publish_to: none
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.14.0-95.2.beta
+workspace:
+  # - apps/**
+  - packages/**
+
+# Add regular dependencies here.
+dependencies:
+  flutter:
+    sdk: flutter
+  
+
+dev_dependencies:
+  flutter_lints: 
+  
+# Localization generation is configured by the workspace-level l10n.yaml.
+flutter:
+  generate: true
