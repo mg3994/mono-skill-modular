@@ -10,7 +10,7 @@ part 'app_database.g.dart';
 
 // TODO: below code to seprate related package
 
-class AppSettings extends Table {
+class AppearanceSettings extends Table {
   IntColumn get id => integer()();
   BoolColumn get hasCompletedOnboarding =>
       boolean().withDefault(const Constant(false))();
@@ -45,7 +45,7 @@ class AppSettings extends Table {
 
 // TODO: remove above from here to seprate related package
 
-@DriftDatabase(tables: [AppSettings])
+@DriftDatabase(tables: [AppearanceSettings])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
     : super(

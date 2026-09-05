@@ -3,12 +3,12 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-class $AppSettingsTable extends AppSettings
-    with TableInfo<$AppSettingsTable, AppSetting> {
+class $AppearanceSettingsTable extends AppearanceSettings
+    with TableInfo<$AppearanceSettingsTable, AppearanceSetting> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AppSettingsTable(this.attachedDatabase, [this._alias]);
+  $AppearanceSettingsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -170,10 +170,10 @@ class $AppSettingsTable extends AppSettings
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'app_settings';
+  static const String $name = 'appearance_settings';
   @override
   VerificationContext validateIntegrity(
-    Insertable<AppSetting> instance, {
+    Insertable<AppearanceSetting> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -268,9 +268,9 @@ class $AppSettingsTable extends AppSettings
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AppSetting map(Map<String, dynamic> data, {String? tablePrefix}) {
+  AppearanceSetting map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AppSetting(
+    return AppearanceSetting(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -315,12 +315,13 @@ class $AppSettingsTable extends AppSettings
   }
 
   @override
-  $AppSettingsTable createAlias(String alias) {
-    return $AppSettingsTable(attachedDatabase, alias);
+  $AppearanceSettingsTable createAlias(String alias) {
+    return $AppearanceSettingsTable(attachedDatabase, alias);
   }
 }
 
-class AppSetting extends DataClass implements Insertable<AppSetting> {
+class AppearanceSetting extends DataClass
+    implements Insertable<AppearanceSetting> {
   final int id;
   final bool hasCompletedOnboarding;
   final bool hasGivenConsent;
@@ -331,7 +332,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
   final bool functionalityStorageConsentGranted;
   final bool personalizationStorageConsentGranted;
   final bool securityStorageConsentGranted;
-  const AppSetting({
+  const AppearanceSetting({
     required this.id,
     required this.hasCompletedOnboarding,
     required this.hasGivenConsent,
@@ -371,8 +372,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     return map;
   }
 
-  AppSettingsCompanion toCompanion(bool nullToAbsent) {
-    return AppSettingsCompanion(
+  AppearanceSettingsCompanion toCompanion(bool nullToAbsent) {
+    return AppearanceSettingsCompanion(
       id: Value(id),
       hasCompletedOnboarding: Value(hasCompletedOnboarding),
       hasGivenConsent: Value(hasGivenConsent),
@@ -392,12 +393,12 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     );
   }
 
-  factory AppSetting.fromJson(
+  factory AppearanceSetting.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AppSetting(
+    return AppearanceSetting(
       id: serializer.fromJson<int>(json['id']),
       hasCompletedOnboarding: serializer.fromJson<bool>(
         json['hasCompletedOnboarding'],
@@ -457,7 +458,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     };
   }
 
-  AppSetting copyWith({
+  AppearanceSetting copyWith({
     int? id,
     bool? hasCompletedOnboarding,
     bool? hasGivenConsent,
@@ -468,7 +469,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     bool? functionalityStorageConsentGranted,
     bool? personalizationStorageConsentGranted,
     bool? securityStorageConsentGranted,
-  }) => AppSetting(
+  }) => AppearanceSetting(
     id: id ?? this.id,
     hasCompletedOnboarding:
         hasCompletedOnboarding ?? this.hasCompletedOnboarding,
@@ -491,8 +492,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     securityStorageConsentGranted:
         securityStorageConsentGranted ?? this.securityStorageConsentGranted,
   );
-  AppSetting copyWithCompanion(AppSettingsCompanion data) {
-    return AppSetting(
+  AppearanceSetting copyWithCompanion(AppearanceSettingsCompanion data) {
+    return AppearanceSetting(
       id: data.id.present ? data.id.value : this.id,
       hasCompletedOnboarding: data.hasCompletedOnboarding.present
           ? data.hasCompletedOnboarding.value
@@ -530,7 +531,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
 
   @override
   String toString() {
-    return (StringBuffer('AppSetting(')
+    return (StringBuffer('AppearanceSetting(')
           ..write('id: $id, ')
           ..write('hasCompletedOnboarding: $hasCompletedOnboarding, ')
           ..write('hasGivenConsent: $hasGivenConsent, ')
@@ -571,7 +572,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AppSetting &&
+      (other is AppearanceSetting &&
           other.id == this.id &&
           other.hasCompletedOnboarding == this.hasCompletedOnboarding &&
           other.hasGivenConsent == this.hasGivenConsent &&
@@ -589,7 +590,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
               this.securityStorageConsentGranted);
 }
 
-class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
+class AppearanceSettingsCompanion extends UpdateCompanion<AppearanceSetting> {
   final Value<int> id;
   final Value<bool> hasCompletedOnboarding;
   final Value<bool> hasGivenConsent;
@@ -600,7 +601,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
   final Value<bool> functionalityStorageConsentGranted;
   final Value<bool> personalizationStorageConsentGranted;
   final Value<bool> securityStorageConsentGranted;
-  const AppSettingsCompanion({
+  const AppearanceSettingsCompanion({
     this.id = const Value.absent(),
     this.hasCompletedOnboarding = const Value.absent(),
     this.hasGivenConsent = const Value.absent(),
@@ -612,7 +613,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.personalizationStorageConsentGranted = const Value.absent(),
     this.securityStorageConsentGranted = const Value.absent(),
   });
-  AppSettingsCompanion.insert({
+  AppearanceSettingsCompanion.insert({
     this.id = const Value.absent(),
     this.hasCompletedOnboarding = const Value.absent(),
     this.hasGivenConsent = const Value.absent(),
@@ -624,7 +625,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.personalizationStorageConsentGranted = const Value.absent(),
     this.securityStorageConsentGranted = const Value.absent(),
   });
-  static Insertable<AppSetting> custom({
+  static Insertable<AppearanceSetting> custom({
     Expression<int>? id,
     Expression<bool>? hasCompletedOnboarding,
     Expression<bool>? hasGivenConsent,
@@ -661,7 +662,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     });
   }
 
-  AppSettingsCompanion copyWith({
+  AppearanceSettingsCompanion copyWith({
     Value<int>? id,
     Value<bool>? hasCompletedOnboarding,
     Value<bool>? hasGivenConsent,
@@ -673,7 +674,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Value<bool>? personalizationStorageConsentGranted,
     Value<bool>? securityStorageConsentGranted,
   }) {
-    return AppSettingsCompanion(
+    return AppearanceSettingsCompanion(
       id: id ?? this.id,
       hasCompletedOnboarding:
           hasCompletedOnboarding ?? this.hasCompletedOnboarding,
@@ -752,7 +753,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
 
   @override
   String toString() {
-    return (StringBuffer('AppSettingsCompanion(')
+    return (StringBuffer('AppearanceSettingsCompanion(')
           ..write('id: $id, ')
           ..write('hasCompletedOnboarding: $hasCompletedOnboarding, ')
           ..write('hasGivenConsent: $hasGivenConsent, ')
@@ -781,16 +782,17 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $AppSettingsTable appSettings = $AppSettingsTable(this);
+  late final $AppearanceSettingsTable appearanceSettings =
+      $AppearanceSettingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [appSettings];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [appearanceSettings];
 }
 
-typedef $$AppSettingsTableCreateCompanionBuilder =
-    AppSettingsCompanion Function({
+typedef $$AppearanceSettingsTableCreateCompanionBuilder =
+    AppearanceSettingsCompanion Function({
       Value<int> id,
       Value<bool> hasCompletedOnboarding,
       Value<bool> hasGivenConsent,
@@ -802,8 +804,8 @@ typedef $$AppSettingsTableCreateCompanionBuilder =
       Value<bool> personalizationStorageConsentGranted,
       Value<bool> securityStorageConsentGranted,
     });
-typedef $$AppSettingsTableUpdateCompanionBuilder =
-    AppSettingsCompanion Function({
+typedef $$AppearanceSettingsTableUpdateCompanionBuilder =
+    AppearanceSettingsCompanion Function({
       Value<int> id,
       Value<bool> hasCompletedOnboarding,
       Value<bool> hasGivenConsent,
@@ -816,9 +818,9 @@ typedef $$AppSettingsTableUpdateCompanionBuilder =
       Value<bool> securityStorageConsentGranted,
     });
 
-class $$AppSettingsTableFilterComposer
-    extends Composer<_$AppDatabase, $AppSettingsTable> {
-  $$AppSettingsTableFilterComposer({
+class $$AppearanceSettingsTableFilterComposer
+    extends Composer<_$AppDatabase, $AppearanceSettingsTable> {
+  $$AppearanceSettingsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -879,9 +881,9 @@ class $$AppSettingsTableFilterComposer
   );
 }
 
-class $$AppSettingsTableOrderingComposer
-    extends Composer<_$AppDatabase, $AppSettingsTable> {
-  $$AppSettingsTableOrderingComposer({
+class $$AppearanceSettingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AppearanceSettingsTable> {
+  $$AppearanceSettingsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -943,9 +945,9 @@ class $$AppSettingsTableOrderingComposer
   );
 }
 
-class $$AppSettingsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $AppSettingsTable> {
-  $$AppSettingsTableAnnotationComposer({
+class $$AppearanceSettingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AppearanceSettingsTable> {
+  $$AppearanceSettingsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1005,35 +1007,44 @@ class $$AppSettingsTableAnnotationComposer
   );
 }
 
-class $$AppSettingsTableTableManager
+class $$AppearanceSettingsTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $AppSettingsTable,
-          AppSetting,
-          $$AppSettingsTableFilterComposer,
-          $$AppSettingsTableOrderingComposer,
-          $$AppSettingsTableAnnotationComposer,
-          $$AppSettingsTableCreateCompanionBuilder,
-          $$AppSettingsTableUpdateCompanionBuilder,
+          $AppearanceSettingsTable,
+          AppearanceSetting,
+          $$AppearanceSettingsTableFilterComposer,
+          $$AppearanceSettingsTableOrderingComposer,
+          $$AppearanceSettingsTableAnnotationComposer,
+          $$AppearanceSettingsTableCreateCompanionBuilder,
+          $$AppearanceSettingsTableUpdateCompanionBuilder,
           (
-            AppSetting,
-            BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>,
+            AppearanceSetting,
+            BaseReferences<
+              _$AppDatabase,
+              $AppearanceSettingsTable,
+              AppearanceSetting
+            >,
           ),
-          AppSetting,
+          AppearanceSetting,
           PrefetchHooks Function()
         > {
-  $$AppSettingsTableTableManager(_$AppDatabase db, $AppSettingsTable table)
-    : super(
+  $$AppearanceSettingsTableTableManager(
+    _$AppDatabase db,
+    $AppearanceSettingsTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$AppSettingsTableFilterComposer($db: db, $table: table),
+              $$AppearanceSettingsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$AppSettingsTableOrderingComposer($db: db, $table: table),
+              $$AppearanceSettingsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$AppSettingsTableAnnotationComposer($db: db, $table: table),
+              $$AppearanceSettingsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -1051,7 +1062,7 @@ class $$AppSettingsTableTableManager
                     const Value.absent(),
                 Value<bool> securityStorageConsentGranted =
                     const Value.absent(),
-              }) => AppSettingsCompanion(
+              }) => AppearanceSettingsCompanion(
                 id: id,
                 hasCompletedOnboarding: hasCompletedOnboarding,
                 hasGivenConsent: hasGivenConsent,
@@ -1083,7 +1094,7 @@ class $$AppSettingsTableTableManager
                     const Value.absent(),
                 Value<bool> securityStorageConsentGranted =
                     const Value.absent(),
-              }) => AppSettingsCompanion.insert(
+              }) => AppearanceSettingsCompanion.insert(
                 id: id,
                 hasCompletedOnboarding: hasCompletedOnboarding,
                 hasGivenConsent: hasGivenConsent,
@@ -1101,12 +1112,14 @@ class $$AppSettingsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable<$AppSettingsTable, AppSetting>(table),
-                  BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>(
-                    db,
+                  e.readTable<$AppearanceSettingsTable, AppearanceSetting>(
                     table,
-                    e,
                   ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $AppearanceSettingsTable,
+                    AppearanceSetting
+                  >(db, table, e),
                 ),
               )
               .toList(),
@@ -1115,27 +1128,31 @@ class $$AppSettingsTableTableManager
       );
 }
 
-typedef $$AppSettingsTableProcessedTableManager =
+typedef $$AppearanceSettingsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $AppSettingsTable,
-      AppSetting,
-      $$AppSettingsTableFilterComposer,
-      $$AppSettingsTableOrderingComposer,
-      $$AppSettingsTableAnnotationComposer,
-      $$AppSettingsTableCreateCompanionBuilder,
-      $$AppSettingsTableUpdateCompanionBuilder,
+      $AppearanceSettingsTable,
+      AppearanceSetting,
+      $$AppearanceSettingsTableFilterComposer,
+      $$AppearanceSettingsTableOrderingComposer,
+      $$AppearanceSettingsTableAnnotationComposer,
+      $$AppearanceSettingsTableCreateCompanionBuilder,
+      $$AppearanceSettingsTableUpdateCompanionBuilder,
       (
-        AppSetting,
-        BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>,
+        AppearanceSetting,
+        BaseReferences<
+          _$AppDatabase,
+          $AppearanceSettingsTable,
+          AppearanceSetting
+        >,
       ),
-      AppSetting,
+      AppearanceSetting,
       PrefetchHooks Function()
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$AppSettingsTableTableManager get appSettings =>
-      $$AppSettingsTableTableManager(_db, _db.appSettings);
+  $$AppearanceSettingsTableTableManager get appearanceSettings =>
+      $$AppearanceSettingsTableTableManager(_db, _db.appearanceSettings);
 }
