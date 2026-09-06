@@ -1,8 +1,11 @@
+import 'dart:io' show Platform;
+
 import 'package:dartnative/dartnative.dart';
+import 'package:dartnative_device_info/dartnative_device_info.dart';
 
 import 'dartnative_plugin_registrant.dart';
 
-void main() {
+void main() async {
   // Platform bindings + (once you add plugins) their FFI symbols. Keep this
   // as the FIRST line of main() — see lib/dartnative_plugin_registrant.dart.
   DartNativePluginRegistrant.registerAll();
@@ -16,12 +19,25 @@ void main() {
     systemNavigationBarColor: Colors.transparent,
     systemNavigationBarIconBrightness: Brightness.dark,
   );
-  runApp(const HomeScreen());
+  final deviceInfo = DeviceInfoPlugin();
+
+  String deviceDetails = 'Unknown device';
+  if (Platform.isIOS) {
+    final iosInfo = await deviceInfo.iosInfo;
+    deviceDetails = '${iosInfo.name}, iOS ${iosInfo.systemVersion}';
+  } else if (Platform.isAndroid) {
+    final androidInfo = await deviceInfo.androidInfo;
+    deviceDetails =
+        '${androidInfo.model}, Android ${androidInfo.version.release}';
+  }
+  runApp(HomeScreen(deviceDetails: deviceDetails));
 }
 
 /// Starter screen — replace this with your own UI.
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.deviceDetails});
+
+  final String deviceDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +64,8 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
+          children: [
+            const Text(
               '👋  Welcome to dartnative',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -58,8 +74,14 @@ class HomeScreen extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 16),
             Text(
+              'Device: $deviceDetails',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Color(0xFF6B6B70), fontSize: 14),
+            ),
+            const SizedBox(height: 10),
+            const Text(
               'Edit lib/main.dart to build your app. '
               'See README.md to swap the app icon / splash logo, '
               'and dartpub.dev for plugins.',

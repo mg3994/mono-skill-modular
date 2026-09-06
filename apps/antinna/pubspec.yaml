@@ -13,6 +13,8 @@ dependencies:
   dartnative_ios: ^1.0.0
   dartnative_android: ^1.0.0
   dartnative_skia: ^1.0.0
+  dartnative_device_info:
+    path: packages/dartnative_device_info
 
 dev_dependencies:
   lints: ^6.0.0

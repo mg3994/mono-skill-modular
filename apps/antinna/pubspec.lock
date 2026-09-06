@@ -9,6 +9,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.0"
+  dartnative_device_info:
+    dependency: "direct main"
+    description:
+      path: "packages/dartnative_device_info"
+      relative: true
+    source: path
+    version: "0.1.0"
   ffi:
     dependency: "direct main"
     description:
