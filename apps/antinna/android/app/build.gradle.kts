@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace = "in.antinna"
-    compileSdk = dartnative.compileSdkVersion
-    ndkVersion = dartnative.ndkVersion
+    compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

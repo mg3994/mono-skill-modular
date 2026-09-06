@@ -4,18 +4,14 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.Keep
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import org.json.JSONArray
 import org.json.JSONObject
 
 @Keep
-class DartNativeDeviceInfoPlugin {
-    companion object {
-        init {
-            try {
-                System.loadLibrary("dartnative_device_info")
-            } catch (_: UnsatisfiedLinkError) {}
-        }
+class DartNativeDeviceInfoPlugin : FlutterPlugin {
 
+    companion object {
         @JvmStatic
         private var appContext: Context? = null
 
@@ -84,4 +80,9 @@ class DartNativeDeviceInfoPlugin {
             return json.toString()
         }
     }
+
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    System.loadLibrary("dartnative_device_info")   // fires JNI_OnLoad below
+  }
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {}
 }
