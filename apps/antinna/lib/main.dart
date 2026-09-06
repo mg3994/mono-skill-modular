@@ -1,7 +1,7 @@
 import 'package:dartnative/dartnative.dart';
-import 'package:l10n/l10n.dart';
 
 import 'dartnative_plugin_registrant.dart';
+import 'l10n/app_localizations.dart';
 import 'router/app_router.dart';
 
 void main() {

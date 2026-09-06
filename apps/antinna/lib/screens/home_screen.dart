@@ -1,5 +1,5 @@
 import 'package:dartnative/dartnative.dart';
-import 'package:l10n/l10n.dart';
+import '../l10n/app_localizations.dart';
 import '../router/app_router.dart';
 
 class HomeScreen extends StatelessWidget {
