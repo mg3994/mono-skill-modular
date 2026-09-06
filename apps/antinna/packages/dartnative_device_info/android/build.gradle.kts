@@ -6,10 +6,10 @@ plugins {
 android {
     namespace = "com.dartnative.deviceinfo"
     compileSdk = 36
-    ndkVersion = "28.2.13676358"
+    ndkVersion = "28.2.13676358" // 16 KB page-size compliance (Play/Android 15+); NDK r28+ aligns LOAD segments to 16 KB
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 24
         ndk {
             abiFilters.addAll(setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
         }
@@ -23,6 +23,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    
 
     externalNativeBuild {
         cmake {

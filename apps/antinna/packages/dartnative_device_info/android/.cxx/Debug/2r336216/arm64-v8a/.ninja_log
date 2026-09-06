@@ -1,0 +1,4 @@
+# ninja log v5
+0	1664	8104037680801707	CMakeFiles/dartnative_device_info.dir/src/main/cpp/device_info_bridge.cpp.o	913ce0b9eee4b251
+1666	1816	8104037682320524	C:/Users/manis/Desktop/workspace/workspace/apps/antinna/build/dartnative_device_info/intermediates/cxx/Debug/2r336216/obj/arm64-v8a/libdartnative_device_info.so	1b513eb8ffa8f394
+159	1144	8104042640503875	C:/Users/manis/Desktop/workspace/workspace/apps/antinna/build/dartnative_device_info/intermediates/cxx/Debug/2r336216/obj/arm64-v8a/libdartnative_device_info.so	1b513eb8ffa8f394

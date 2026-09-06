@@ -1,0 +1,1 @@
+C:\Users\manis\Desktop\workspace\workspace\apps\antinna\packages\dartnative_device_info\android\CMakeLists.txt

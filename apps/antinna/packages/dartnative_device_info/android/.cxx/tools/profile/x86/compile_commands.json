@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/Users/manis/Desktop/workspace/workspace/apps/antinna/packages/dartnative_device_info/android/.cxx/Debug/2r336216/x86",
+  "command": "C:\\Users\\manis\\AppData\\Local\\Android\\Sdk\\ndk\\28.2.13676358\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=i686-none-linux-android21 --sysroot=C:/Users/manis/AppData/Local/Android/Sdk/ndk/28.2.13676358/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Ddartnative_device_info_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fno-limit-debug-info  -fPIC -o CMakeFiles\\dartnative_device_info.dir\\src\\main\\cpp\\device_info_bridge.cpp.o -c C:\\Users\\manis\\Desktop\\workspace\\workspace\\apps\\antinna\\packages\\dartnative_device_info\\android\\src\\main\\cpp\\device_info_bridge.cpp",
+  "file": "C:\\Users\\manis\\Desktop\\workspace\\workspace\\apps\\antinna\\packages\\dartnative_device_info\\android\\src\\main\\cpp\\device_info_bridge.cpp"
+}
+]
