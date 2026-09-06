@@ -4,6 +4,8 @@ include:
 analyzer:
   exclude:
     - build/**
+    - "**/build/**"
+    - "**/generated/**"
 linter:
   rules:
     unnecessary_async: true

@@ -5,6 +5,9 @@ targets:
       - pubspec.yaml
       - lib/$lib$
       - $package$
+ # Exclude generated/build output
+      - "!build/**"
+      
 
     builders:
       drift_dev:

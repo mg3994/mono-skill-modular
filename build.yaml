@@ -10,6 +10,10 @@ targets:
       - pubspec.yaml
       - lib/$lib$
       - $package$
+    # Exclude generated/build output
+      - "!build/**"
+      - "!**/build/**"
+      - "!**/generated/**"
     builders:
       build_web_compilers:entrypoint:
         generate_for:
