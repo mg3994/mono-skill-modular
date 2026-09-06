@@ -1,7 +1,5 @@
-import 'package:core/build_mode/build_mode_interface.dart' show BuildModeInterface;
-// ignore: depend_on_referenced_packages
-import 'package:flutter/foundation.dart';
-
+import 'package:core/build_mode/build_mode_interface.dart'
+    show BuildModeInterface;
 
 enum BuildMode implements BuildModeInterface {
   debug,
@@ -9,18 +7,14 @@ enum BuildMode implements BuildModeInterface {
   release;
 
   static BuildMode get current {
-    if (kDebugMode) {
-      return BuildMode.debug;
-    }
-
-    if (kProfileMode) {
+    if (const bool.fromEnvironment('dart.vm.profile')) {
       return BuildMode.profile;
     }
 
-    if (kReleaseMode) {
+    if (const bool.fromEnvironment('dart.vm.product')) {
       return BuildMode.release;
     }
 
-    throw UnimplementedError('Active environment build mode is unrecognized.');
+    return BuildMode.debug;
   }
 }
