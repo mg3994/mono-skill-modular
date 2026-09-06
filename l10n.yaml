@@ -4,7 +4,7 @@ template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
 output-class: AppLocalizations
 nullable-getters: false
-untranslated-messages-file: packages/l10n/build/untranslated.json
+untranslated-messages-file: packages/l10n/lib/generated/untranslated.json
 use-escaping: false
 use-deferred-loading: true
 relax-syntax: true

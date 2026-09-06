@@ -1,4 +1,4 @@
-import 'flavor_interface.dart';
+import '../flavor/flavor_interface.dart';
 
 enum Flavor implements FlavorInterface {
   development(
@@ -32,7 +32,9 @@ enum Flavor implements FlavorInterface {
       'dev' || 'development' => Flavor.development,
       'stg' || 'staging' => Flavor.staging,
       'prod' || 'production' => Flavor.production,
-      _ => Flavor.production,
+      _ =>
+        Flavor
+            .production, //by default , please chage it whenever you are in dev
     };
   }
 }

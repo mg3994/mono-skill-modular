@@ -1,6 +1,7 @@
+import 'package:core/build_mode/build_mode_interface.dart' show BuildModeInterface;
+// ignore: depend_on_referenced_packages
 import 'package:flutter/foundation.dart';
 
-import 'build_mode_interface.dart';
 
 enum BuildMode implements BuildModeInterface {
   debug,

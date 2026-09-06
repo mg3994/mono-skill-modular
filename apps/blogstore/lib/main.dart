@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp(config: appFlavorConfig));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.config});
+
+  final AppFlavorConfig config;
 
   // This widget is the root of your application.
   @override
