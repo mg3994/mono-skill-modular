@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:core/core.dart';
 
 void main() {
-  const String? appFlavor =
+  const String appFlavor =
       String.fromEnvironment(
         'FLUTTER_APP_FLAVOR',
         defaultValue: 'production',
@@ -9,7 +10,12 @@ void main() {
   // ? String.fromEnvironment('FLUTTER_APP_FLAVOR')
   // : null
   ;
-  
+
+  final AppFlavorConfig appFlavorConfig = FlavorConfig(
+    flavor: Flavor.fromString(appFlavor),
+    buildMode: BuildMode.current,
+  );
+
   runApp(MyApp(config: appFlavorConfig));
 }
 
@@ -41,13 +47,13 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page', config: config),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.config});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -59,6 +65,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final AppFlavorConfig config;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -115,6 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: .center,
           children: [
+            Text(widget.config.buildMode.name),
+            Text(widget.config.flavor.name),
+            Text(widget.config.flavor.baseUrl),
             const Text('You have pushed the button this many times:'),
             Text(
               '$_counter',

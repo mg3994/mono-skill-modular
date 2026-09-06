@@ -1,0 +1,117 @@
+name: Build apps
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flutter:
+    name: Build Flutter app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: beta
+          cache: true
+
+      - name: Install dependencies
+        working-directory: apps/blogstore
+        run: flutter pub get
+
+      # - name: Run Flutter tests
+      #   working-directory: apps/blogstore
+      #   run: flutter test
+
+      - name: Build Flutter APK
+        working-directory: apps/blogstore
+        run: flutter build apk --release
+
+      - name: Upload Flutter APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: blogstore-android
+          path: apps/blogstore/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+
+  dartnative:
+    name: Build DartNative app
+    runs-on: ubuntu-latest
+    env:
+      DARTNATIVE_LICENSE_KEY: ${{ secrets.DARTNATIVE_LICENSE_KEY }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android API 36
+        run: sdkmanager 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0'
+
+      - name: Install DartNative
+        shell: bash
+        run: |
+          curl -fsSL https://cdn.dartnative.com/install.sh | sh
+          echo "$HOME/zero/bin" >> "$GITHUB_PATH"
+          "$HOME/zero/bin/dn" --version
+
+      - name: Configure DartNative license
+        if: ${{ env.DARTNATIVE_LICENSE_KEY != '' }}
+        working-directory: apps/antinna
+        run: dn config --license-key "$DARTNATIVE_LICENSE_KEY"
+
+      - name: Install dependencies
+        working-directory: apps/antinna
+        run: dn pub get
+
+      # - name: Run DartNative tests
+      #   working-directory: apps/antinna
+      #   run: dn test
+
+      - name: Build DartNative APK
+        working-directory: apps/antinna
+        run: dn build apk --release
+
+      - name: Build DartNative App Bundle
+        working-directory: apps/antinna
+        run: dn build appbundle --release
+
+      - name: Collect DartNative artifacts
+        working-directory: apps/antinna
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          find build -type f \( -name '*.apk' -o -name '*.aab' \) -exec cp {} artifacts/ \;
+          test -n "$(find artifacts -type f -print -quit)"
+
+      - name: Upload DartNative artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: antinna-android
+          path: apps/antinna/artifacts
+          if-no-files-found: error
