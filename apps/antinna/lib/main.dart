@@ -29,13 +29,14 @@ class AntinnaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Antinna',
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      initialRoute: AppRouter.home,
-      onGenerateRoute: AppRouter.onGenerateRoute,
+    return AppLocalizationsScope(
+      localizations: const AppLocalizations('en'),
+      child: MaterialApp(
+        title: 'Antinna',
+        debugShowCheckedModeBanner: false,
+        initialRoute: AppRouter.home,
+        routes: AppRouter.routes,
+      ),
     );
   }
 }

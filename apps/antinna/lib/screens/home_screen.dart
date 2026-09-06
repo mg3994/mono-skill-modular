@@ -1,6 +1,8 @@
 import 'package:dartnative/dartnative.dart';
+
 import '../l10n/app_localizations.dart';
 import '../router/app_router.dart';
+import '../widgets/primary_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,7 +26,7 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: Icon(Icons.settings),
             onPressed: () {
               Navigator.pushNamed(context, AppRouter.settings);
             },
@@ -57,15 +59,11 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            ElevatedButton(
+            PrimaryButton(
+              label: 'View Details',
               onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRouter.details,
-                  arguments: 'DartNative Modular Architecture',
-                );
+                Navigator.pushNamed(context, AppRouter.details);
               },
-              child: const Text('View Details'),
             ),
           ],
         ),

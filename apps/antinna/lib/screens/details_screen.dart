@@ -1,5 +1,7 @@
 import 'package:dartnative/dartnative.dart';
+
 import '../l10n/app_localizations.dart';
+import '../widgets/primary_button.dart';
 
 class DetailsScreen extends StatelessWidget {
   final String? itemTitle;
@@ -29,10 +31,10 @@ class DetailsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.info_outline,
               size: 64,
-              color: Color(0xFF007AFF),
+              color: const Color(0xFF007AFF),
             ),
             const SizedBox(height: 16),
             Text(
@@ -46,18 +48,16 @@ class DetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              l10n != null
-                  ? l10n.postCount(1)
-                  : '1 item in catalog',
+              l10n != null ? l10n.postCount(1) : '1 item in catalog',
               style: const TextStyle(
                 fontSize: 14,
                 color: Color(0xFF6B6B70),
               ),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
+            PrimaryButton(
+              label: 'Back',
               onPressed: () => Navigator.pop(context),
-              child: const Text('Back'),
             ),
           ],
         ),

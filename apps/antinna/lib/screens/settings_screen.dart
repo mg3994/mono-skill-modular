@@ -1,4 +1,5 @@
 import 'package:dartnative/dartnative.dart';
+
 import '../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -26,28 +27,28 @@ class SettingsScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16),
         children: [
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: Icon(Icons.person),
             title: Text(l10n?.settingsGeneralTitle ?? 'General'),
             subtitle: Text(l10n?.settingsGeneralSubtitle ?? 'Profile, preferences'),
             onTap: () {},
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.palette),
+            leading: Icon(Icons.palette),
             title: Text(l10n?.settingsAppearanceTitle ?? 'Appearance'),
             subtitle: Text(l10n?.settingsAppearanceSubtitle ?? 'Theme, colors, language'),
             onTap: () {},
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.notifications),
+            leading: Icon(Icons.notifications),
             title: Text(l10n?.settingsNotificationsTitle ?? 'Notifications'),
             subtitle: Text(l10n?.settingsNotificationsSubtitle ?? 'Alerts, sounds'),
             onTap: () {},
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.lock),
+            leading: Icon(Icons.lock),
             title: Text(l10n?.settingsPrivacyTitle ?? 'Privacy & Security'),
             subtitle: Text(l10n?.settingsPrivacySubtitle ?? 'Passwords, access'),
             onTap: () {},

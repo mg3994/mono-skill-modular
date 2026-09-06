@@ -5,7 +5,7 @@ publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: ">=3.11.0 <4.0.0"
+  sdk: ^3.14.0-95.2.beta
 workspace:
   - apps/blogstore
   - packages/**
