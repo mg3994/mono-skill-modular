@@ -15,10 +15,17 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 
     jclass localClass = env->FindClass("com/dartnative/deviceinfo/DartNativeDeviceInfoPlugin");
     if (!localClass) {
+        if (env->ExceptionCheck()) {
+            env->ExceptionClear();
+        }
         return JNI_ERR;
     }
     g_pluginClass = reinterpret_cast<jclass>(env->NewGlobalRef(localClass));
     g_getInfoMethod = env->GetStaticMethodID(g_pluginClass, "getAndroidInfoJson", "()Ljava/lang/String;");
+
+    if (env->ExceptionCheck()) {
+        env->ExceptionClear();
+    }
 
     return JNI_VERSION_1_6;
 }
@@ -38,6 +45,12 @@ const char* DNDeviceInfoGetAndroidInfo() {
     }
 
     auto jJsonStr = reinterpret_cast<jstring>(env->CallStaticObjectMethod(g_pluginClass, g_getInfoMethod));
+    if (env->ExceptionCheck()) {
+        env->ExceptionClear();
+        if (needsDetach) g_jvm->DetachCurrentThread();
+        return nullptr;
+    }
+
     if (!jJsonStr) {
         if (needsDetach) g_jvm->DetachCurrentThread();
         return nullptr;

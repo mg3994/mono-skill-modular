@@ -1,6 +1,12 @@
 import UIKit
 import Foundation
 
+@objc public class DartNativeDeviceInfoPlugin: NSObject {
+    @objc public static func register() {
+        // Keeps plugin symbols retained in static linking builds against dead-code elimination.
+    }
+}
+
 @_cdecl("DNDeviceInfoGetIosInfo")
 public func DNDeviceInfoGetIosInfo() -> UnsafeMutablePointer<CChar>? {
     let device = UIDevice.current

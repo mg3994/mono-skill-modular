@@ -28,8 +28,14 @@ class DartNativeDeviceInfoPlugin {
         fun getAndroidInfoJson(): String {
             val json = JSONObject()
 
+            val baseOS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Build.VERSION.BASE_OS ?: ""
+            } else {
+                ""
+            }
+
             val versionJson = JSONObject().apply {
-                put("baseOS", Build.VERSION.BASE_OS ?: "")
+                put("baseOS", baseOS)
                 put("sdkInt", Build.VERSION.SDK_INT)
                 put("release", Build.VERSION.RELEASE ?: "")
                 put("incremental", Build.VERSION.INCREMENTAL ?: "")

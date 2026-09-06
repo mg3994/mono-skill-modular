@@ -9,9 +9,9 @@ typedef _FreeDeviceInfoStringC = Void Function(Pointer<Utf8>);
 typedef _FreeDeviceInfoStringDart = void Function(Pointer<Utf8>);
 
 class DeviceInfoFFIBindings {
-  static late final _GetDeviceInfoDart _getIosInfo;
-  static late final _GetDeviceInfoDart _getAndroidInfo;
-  static late final _FreeDeviceInfoStringDart _freeString;
+  static _GetDeviceInfoDart? _getIosInfo;
+  static _GetDeviceInfoDart? _getAndroidInfo;
+  static _FreeDeviceInfoStringDart? _freeString;
   static bool _loaded = false;
 
   static bool get isLoaded => _loaded;
@@ -20,42 +20,53 @@ class DeviceInfoFFIBindings {
     if (_loaded) return;
     if (!Platform.isIOS && !Platform.isAndroid) return;
 
-    final DynamicLibrary lib = Platform.isAndroid
-        ? DynamicLibrary.open('libdartnative_device_info.so')
-        : DynamicLibrary.process();
+    try {
+      final DynamicLibrary lib = Platform.isAndroid
+          ? DynamicLibrary.open('libdartnative_device_info.so')
+          : DynamicLibrary.process();
 
-    if (Platform.isIOS) {
-      _getIosInfo = lib.lookupFunction<_GetDeviceInfoC, _GetDeviceInfoDart>(
-          'DNDeviceInfoGetIosInfo');
-    } else if (Platform.isAndroid) {
-      _getAndroidInfo = lib.lookupFunction<_GetDeviceInfoC, _GetDeviceInfoDart>(
-          'DNDeviceInfoGetAndroidInfo');
+      if (Platform.isIOS) {
+        _getIosInfo = lib.lookupFunction<_GetDeviceInfoC, _GetDeviceInfoDart>(
+            'DNDeviceInfoGetIosInfo');
+      } else if (Platform.isAndroid) {
+        _getAndroidInfo =
+            lib.lookupFunction<_GetDeviceInfoC, _GetDeviceInfoDart>(
+                'DNDeviceInfoGetAndroidInfo');
+      }
+
+      _freeString = lib.lookupFunction<_FreeDeviceInfoStringC,
+          _FreeDeviceInfoStringDart>('DNDeviceInfoFreeString');
+      _loaded = true;
+    } catch (e) {
+      // Catch any FFI symbol lookup or library load failure during registrant execution
+      // so the application splash screen / boot sequence is never blocked or frozen.
+      _loaded = false;
     }
-
-    _freeString = lib.lookupFunction<_FreeDeviceInfoStringC,
-        _FreeDeviceInfoStringDart>('DNDeviceInfoFreeString');
-    _loaded = true;
   }
 
   static String? getIosInfoJson() {
-    if (!_loaded || !Platform.isIOS) return null;
-    final ptr = _getIosInfo();
+    if (!_loaded || !Platform.isIOS || _getIosInfo == null) return null;
+    final ptr = _getIosInfo!();
     if (ptr == nullptr) return null;
     try {
       return ptr.toDartString();
     } finally {
-      _freeString(ptr);
+      if (_freeString != null) {
+        _freeString!(ptr);
+      }
     }
   }
 
   static String? getAndroidInfoJson() {
-    if (!_loaded || !Platform.isAndroid) return null;
-    final ptr = _getAndroidInfo();
+    if (!_loaded || !Platform.isAndroid || _getAndroidInfo == null) return null;
+    final ptr = _getAndroidInfo!();
     if (ptr == nullptr) return null;
     try {
       return ptr.toDartString();
     } finally {
-      _freeString(ptr);
+      if (_freeString != null) {
+        _freeString!(ptr);
+      }
     }
   }
 }
