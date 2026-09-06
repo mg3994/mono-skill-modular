@@ -26,22 +26,22 @@ abstract final class DartNativePluginRegistrant {
   /// Registers the platform bindings and loads every DartNative plugin's
   /// FFI symbols. Call once as the first line of `main()`, before `runApp`.
   static void registerAll() {
-    // const dnLicenseToken = String.fromEnvironment('DART_NATIVE_LICENSE_TOKEN');
-    // if (dnLicenseToken.isNotEmpty) {
-    //   DartNativeLicense.instance.provideToken(dnLicenseToken);
-    // }
-    // const dnLicenseKey = String.fromEnvironment('DN_LICENSE_KEY');
-    // if (dnLicenseKey.isNotEmpty) {
-    //   DartNativeLicense.instance.provideLicenseKey(dnLicenseKey);
-    // }
-    // const dnTrialEnded = bool.fromEnvironment('DN_TRIAL_ENDED');
-    // if (dnTrialEnded) {
-    //   DartNativeLicense.instance.noteTrialEnded();
-    // }
-    // DartNativeLicense.instance.reportPluginUsage(const <String>[
-    //   'dartnative_device_info',
-    //   'dartnative_skia',
-    // ]);
+    const dnLicenseToken = String.fromEnvironment('DART_NATIVE_LICENSE_TOKEN');
+    if (dnLicenseToken.isNotEmpty) {
+      DartNativeLicense.instance.provideToken(dnLicenseToken);
+    }
+    const dnLicenseKey = String.fromEnvironment('DN_LICENSE_KEY');
+    if (dnLicenseKey.isNotEmpty) {
+      DartNativeLicense.instance.provideLicenseKey(dnLicenseKey);
+    }
+    const dnTrialEnded = bool.fromEnvironment('DN_TRIAL_ENDED');
+    if (dnTrialEnded) {
+      DartNativeLicense.instance.noteTrialEnded();
+    }
+    DartNativeLicense.instance.reportPluginUsage(const <String>[
+      'dartnative_device_info',
+      'dartnative_skia',
+    ]);
     registerNativeBindings(
       Platform.isAndroid
           ? AndroidNativeBindings.instance
