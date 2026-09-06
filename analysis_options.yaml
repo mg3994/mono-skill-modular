@@ -1,17 +1,12 @@
 include:
   - package:flutter_lints/flutter.yaml
-  - package:kaisel_lint/recommended.yaml
+
 analyzer:
   exclude:
     - build/**
+    - "**/build/**"
+    - "**/generated/**"
+
 linter:
   rules:
     unnecessary_async: true
-
-plugins:
-  kaisel_lint:
-    version: ^0.5.1
-    diagnostics:
-      require_route_props: true
-      avoid_modal_route_on_main_stack: true
-      prefer_const_route_constructors: true # opt-in
