@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
-
 void main() {
+  const String? appFlavor =
+      String.fromEnvironment(
+        'FLUTTER_APP_FLAVOR',
+        defaultValue: 'production',
+      ) //!= ''
+  // ? String.fromEnvironment('FLUTTER_APP_FLAVOR')
+  // : null
+  ;
+  
   runApp(MyApp(config: appFlavorConfig));
 }
 
