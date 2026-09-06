@@ -6,15 +6,10 @@ enum BuildMode implements BuildModeInterface {
   profile,
   release;
 
-  static BuildMode get current {
-    if (const bool.fromEnvironment('dart.vm.profile')) {
-      return BuildMode.profile;
-    }
-
-    if (const bool.fromEnvironment('dart.vm.product')) {
-      return BuildMode.release;
-    }
-
-    return BuildMode.debug;
-  }
+  static const BuildMode current =
+      bool.fromEnvironment('dart.vm.profile')
+          ? BuildMode.profile
+          : bool.fromEnvironment('dart.vm.product')
+              ? BuildMode.release
+              : BuildMode.debug;
 }

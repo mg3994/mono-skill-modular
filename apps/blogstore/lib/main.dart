@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:core/core.dart';
 
+const String appFlavor = String.fromEnvironment(
+  'FLUTTER_APP_FLAVOR',
+  defaultValue: 'production',
+);
+
+const Flavor selectedFlavor = appFlavor == 'dev' || appFlavor == 'development'
+    ? Flavor.development
+    : appFlavor == 'stg' || appFlavor == 'staging'
+    ? Flavor.staging
+    : Flavor.production;
+
+const AppFlavorConfig config = FlavorConfig(
+  flavor: selectedFlavor,
+  buildMode: BuildMode.current,
+);
+
 void main() {
-  const String appFlavor =
-      String.fromEnvironment(
-        'FLUTTER_APP_FLAVOR',
-        defaultValue: 'production',
-      ) //!= ''
-  // ? String.fromEnvironment('FLUTTER_APP_FLAVOR')
-  // : null
-  ;
-
-  final AppFlavorConfig appFlavorConfig = FlavorConfig(
-    flavor: Flavor.fromString(appFlavor),
-    buildMode: BuildMode.current,
-  );
-
-  runApp(MyApp(config: appFlavorConfig));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.config});
-
-  final AppFlavorConfig config;
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -47,10 +47,10 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page', config: config),
+      home: const MyHomePage(title: 'Flutter Demo Home Page', config: config),
     );
   }
-}
+} 
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title, required this.config});

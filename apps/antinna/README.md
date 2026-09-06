@@ -48,6 +48,9 @@ and `android/.../{Application,MainActivity}.kt` + the Material3 themes in
 > `dartnative_framework`. Fix them if you created it elsewhere.
 
 #How it looks
+# powershell command
+
+> Invoke-WebRequest -Uri "https://cdn.dartnative.com/dn_infra/sdk/latest/dn-sdk.tar.gz" -OutFile "dn-sdk.tar.gz"; tar -xzf "dn-sdk.tar.gz" -C "$HOME"
 
 ```
  dn create --org in antinna

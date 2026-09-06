@@ -1,40 +1,44 @@
 import '../flavor/flavor_interface.dart';
 
-enum Flavor implements FlavorInterface {
-  development(
+class Flavor implements FlavorInterface {
+  static const Flavor development = Flavor._(
     baseUrl: String.fromEnvironment(
       'DEV_BLOGGER_URL',
       defaultValue: 'https://api.dev.yourdomain.com',
     ),
-  ),
+  );
 
-  staging(
+  static const Flavor staging = Flavor._(
     baseUrl: String.fromEnvironment(
       'STG_BLOGGER_URL',
       defaultValue: 'https://api.stg.yourdomain.com',
     ),
-  ),
+  );
 
-  production(
+  static const Flavor production = Flavor._(
     baseUrl: String.fromEnvironment(
       'PROD_BLOGGER_URL',
       defaultValue: 'https://api.prod.yourdomain.com',
     ),
   );
 
-  const Flavor({required this.baseUrl});
+  static Flavor fromString(String? value) {
+    return switch (value?.toLowerCase()) {
+      'dev' || 'development' => development,
+      'stg' || 'staging' => staging,
+      'prod' || 'production' => production,
+      _ => production,
+    };
+  }
+
+  const Flavor._({required this.baseUrl});
 
   @override
   final String baseUrl;
 
-  static Flavor fromString(String? value) {
-    return switch (value?.toLowerCase()) {
-      'dev' || 'development' => Flavor.development,
-      'stg' || 'staging' => Flavor.staging,
-      'prod' || 'production' => Flavor.production,
-      _ =>
-        Flavor
-            .production, //by default , please chage it whenever you are in dev
-    };
+  String get name {
+    if (identical(this, development)) return 'development';
+    if (identical(this, staging)) return 'staging';
+    return 'production';
   }
 }
