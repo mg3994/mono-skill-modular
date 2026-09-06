@@ -13,3 +13,4 @@ export 'src/repositories/post_repository.dart';
 export 'src/usecases/get_appearance_settings.dart';
 export 'src/usecases/save_appearance_settings.dart';
 export 'src/usecases/get_posts.dart';
+export 'src/usecases/search_posts.dart';

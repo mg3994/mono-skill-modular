@@ -26,6 +26,7 @@ void main() async {
       getAppearanceSettings: GetAppearanceSettings(appearanceRepo),
       saveAppearanceSettings: SaveAppearanceSettings(appearanceRepo),
       getPosts: GetPosts(postRepo),
+      searchPosts: SearchPosts(postRepo),
     ),
   );
 }
@@ -37,12 +38,14 @@ class BlogStoreApp extends StatelessWidget {
     required this.getAppearanceSettings,
     required this.saveAppearanceSettings,
     required this.getPosts,
+    required this.searchPosts,
   });
 
   final AppFlavorConfig config;
   final GetAppearanceSettings getAppearanceSettings;
   final SaveAppearanceSettings saveAppearanceSettings;
   final GetPosts getPosts;
+  final SearchPosts searchPosts;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +60,7 @@ class BlogStoreApp extends StatelessWidget {
       home: BlogStoreHomePage(
         config: config,
         getPosts: getPosts,
+        searchPosts: searchPosts,
         getAppearanceSettings: getAppearanceSettings,
         saveAppearanceSettings: saveAppearanceSettings,
       ),
@@ -69,12 +73,14 @@ class BlogStoreHomePage extends StatefulWidget {
     super.key,
     required this.config,
     required this.getPosts,
+    required this.searchPosts,
     required this.getAppearanceSettings,
     required this.saveAppearanceSettings,
   });
 
   final AppFlavorConfig config;
   final GetPosts getPosts;
+  final SearchPosts searchPosts;
   final GetAppearanceSettings getAppearanceSettings;
   final SaveAppearanceSettings saveAppearanceSettings;
 
@@ -86,6 +92,7 @@ class _BlogStoreHomePageState extends State<BlogStoreHomePage> {
   List<PostEntity> _posts = [];
   AppearanceSettingsEntity? _settings;
   bool _isLoading = true;
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -101,6 +108,14 @@ class _BlogStoreHomePageState extends State<BlogStoreHomePage> {
       _posts = postsResult.valueOrNull ?? [];
       _settings = settingsResult.valueOrNull ?? const AppearanceSettingsEntity(id: 1);
       _isLoading = false;
+    });
+  }
+
+  Future<void> _onSearchChanged(String query) async {
+    _searchQuery = query;
+    final results = await widget.searchPosts(query);
+    setState(() {
+      _posts = results.valueOrNull ?? [];
     });
   }
 
@@ -171,44 +186,67 @@ class _BlogStoreHomePageState extends State<BlogStoreHomePage> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: l10n?.searchSettings ?? 'Search posts...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: const OutlineInputBorder(),
+                  ),
+                  onChanged: _onSearchChanged,
+                ),
+                const SizedBox(height: 16),
                 Text(
-                  'Latest Articles',
+                  _searchQuery.isEmpty
+                      ? 'Latest Articles'
+                      : (l10n?.searchResults(_posts.length, _searchQuery) ??
+                          '${_posts.length} results for "$_searchQuery"'),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
-                ..._posts.map(
-                  (post) => Card(
-                    margin: const EdgeInsets.only(bottom: 12.0),
-                    child: ListTile(
-                      title: Text(post.title),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 4),
-                          Text(post.content),
-                          const SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'By ${post.authorName}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(context).colorScheme.secondary,
+                if (_posts.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    child: Center(
+                      child: Text(
+                        l10n?.noSettingsFound ?? 'No matching posts found',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  )
+                else
+                  ..._posts.map(
+                    (post) => Card(
+                      margin: const EdgeInsets.only(bottom: 12.0),
+                      child: ListTile(
+                        title: Text(post.title),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(post.content),
+                            const SizedBox(height: 6),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'By ${post.authorName}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).colorScheme.secondary,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                l10n?.readingTime(post.readTimeMinutes) ??
-                                    '${post.readTimeMinutes} min read',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Text(
+                                  l10n?.readingTime(post.readTimeMinutes) ??
+                                      '${post.readTimeMinutes} min read',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
     );

@@ -1,6 +1,7 @@
 import 'package:blogstore/main.dart';
 import 'package:core/core.dart';
 import 'package:domain/domain.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class MockAppearanceRepository implements AppearanceRepository {
@@ -25,18 +26,38 @@ class MockAppearanceRepository implements AppearanceRepository {
 }
 
 class MockPostRepository implements PostRepository {
+  final List<PostEntity> _posts = [
+    PostEntity(
+      id: '1',
+      title: 'Modular LEGO Architecture Test',
+      content: 'Testing Clean Arch in BlogStore',
+      authorName: 'Jules',
+      publishedAt: DateTime.now(),
+      readTimeMinutes: 3,
+    ),
+    PostEntity(
+      id: '2',
+      title: 'Flutter UI Components',
+      content: 'Building user interface',
+      authorName: 'Kaisel',
+      publishedAt: DateTime.now(),
+      readTimeMinutes: 2,
+    ),
+  ];
+
   @override
   Future<Result<List<PostEntity>, Failure>> getPosts() async {
-    return Result.success([
-      PostEntity(
-        id: '1',
-        title: 'Modular LEGO Architecture Test',
-        content: 'Testing Clean Arch in BlogStore',
-        authorName: 'Jules',
-        publishedAt: DateTime.now(),
-        readTimeMinutes: 3,
-      ),
-    ]);
+    return Result.success(_posts);
+  }
+
+  @override
+  Future<Result<List<PostEntity>, Failure>> searchPosts(String query) async {
+    final filtered = _posts
+        .where((p) =>
+            p.title.toLowerCase().contains(query.toLowerCase()) ||
+            p.content.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    return Result.success(filtered);
   }
 
   @override
@@ -46,7 +67,7 @@ class MockPostRepository implements PostRepository {
 }
 
 void main() {
-  testWidgets('BlogStoreApp renders main screen with posts and settings',
+  testWidgets('BlogStoreApp renders main screen and supports post search',
       (WidgetTester tester) async {
     const config = AppFlavorConfig(
       flavor: Flavor.development,
@@ -61,6 +82,7 @@ void main() {
         getAppearanceSettings: GetAppearanceSettings(appearanceRepo),
         saveAppearanceSettings: SaveAppearanceSettings(appearanceRepo),
         getPosts: GetPosts(postRepo),
+        searchPosts: SearchPosts(postRepo),
       ),
     );
 
@@ -68,5 +90,13 @@ void main() {
 
     expect(find.text('BlogStore'), findsOneWidget);
     expect(find.text('Modular LEGO Architecture Test'), findsOneWidget);
+    expect(find.text('Flutter UI Components'), findsOneWidget);
+
+    // Enter search query
+    await tester.enterText(find.byType(TextField), 'LEGO');
+    await tester.pumpAndSettle();
+
+    expect(find.text('Modular LEGO Architecture Test'), findsOneWidget);
+    expect(find.text('Flutter UI Components'), findsNothing);
   });
 }

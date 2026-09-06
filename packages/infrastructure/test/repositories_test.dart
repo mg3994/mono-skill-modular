@@ -37,14 +37,19 @@ void main() {
       expect(loaded?.hasGivenConsent, isTrue);
     });
 
-    test('InMemoryPostRepository returns sample posts', () async {
+    test('InMemoryPostRepository returns sample posts and filters by search query', () async {
       final postsResult = await postRepo.getPosts();
       expect(postsResult.isSuccess, isTrue);
       expect(postsResult.valueOrNull, isNotEmpty);
 
-      final singleResult = await postRepo.getPostById('1');
-      expect(singleResult.isSuccess, isTrue);
-      expect(singleResult.valueOrNull?.title, contains('Modular'));
+      final searchResult = await postRepo.searchPosts('Modular');
+      expect(searchResult.isSuccess, isTrue);
+      expect(searchResult.valueOrNull?.length, equals(1));
+      expect(searchResult.valueOrNull?.first.title, contains('Modular'));
+
+      final emptySearchResult = await postRepo.searchPosts('NonExistentTerm123');
+      expect(emptySearchResult.isSuccess, isTrue);
+      expect(emptySearchResult.valueOrNull, isEmpty);
     });
   });
 }
