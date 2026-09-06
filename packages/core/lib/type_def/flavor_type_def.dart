@@ -1,6 +1,5 @@
 import '../build_mode/build_mode.dart' show BuildMode;
-import '../config/flavor.dart' show Flavor;
-import '../config/flavor_config.dart' show FlavorConfig;
+import '../config/config.dart' show Flavor, FlavorConfig;
 
 /// A type alias for the application's flavor and build-mode configuration.
 ///
