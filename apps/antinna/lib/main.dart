@@ -24,13 +24,32 @@ void main() {
 }
 
 /// Root application widget configuring localization and routing for DartNative.
-class AntinnaApp extends StatelessWidget {
+class AntinnaApp extends StatefulWidget {
   const AntinnaApp({super.key});
+
+  static AntinnaAppState? of(BuildContext context) {
+    return context.findAncestorStateOfType<AntinnaAppState>();
+  }
+
+  @override
+  State<AntinnaApp> createState() => AntinnaAppState();
+}
+
+class AntinnaAppState extends State<AntinnaApp> {
+  String _localeCode = 'en';
+
+  void setLocale(String localeCode) {
+    setState(() {
+      _localeCode = localeCode;
+    });
+  }
+
+  String get currentLocale => _localeCode;
 
   @override
   Widget build(BuildContext context) {
     return AppLocalizationsScope(
-      localizations: const AppLocalizations('en'),
+      localizations: AppLocalizations(_localeCode),
       child: MaterialApp(
         title: 'Antinna',
         debugShowCheckedModeBanner: false,

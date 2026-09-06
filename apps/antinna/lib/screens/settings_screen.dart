@@ -1,6 +1,7 @@
 import 'package:dartnative/dartnative.dart';
 
 import '../l10n/app_localizations.dart';
+import '../main.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -9,6 +10,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final title = l10n?.settingsTitle ?? 'Settings';
+    final currentLocale = AntinnaApp.of(context)?.currentLocale ?? 'en';
 
     return Scaffold(
       brightness: Brightness.light,
@@ -26,6 +28,16 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 16),
         children: [
+          ListTile(
+            leading: Icon(Icons.language),
+            title: const Text('Language / Idioma'),
+            subtitle: Text(currentLocale == 'es' ? 'Español' : 'English'),
+            onTap: () {
+              final newLocale = currentLocale == 'en' ? 'es' : 'en';
+              AntinnaApp.of(context)?.setLocale(newLocale);
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: Icon(Icons.person),
             title: Text(l10n?.settingsGeneralTitle ?? 'General'),

@@ -1,10 +1,12 @@
 import 'package:dartnative/dartnative.dart';
+import 'package:intl/intl.dart';
 
-/// AppLocalizations provides localized strings for Antinna in DartNative.
+/// AppLocalizations provides localized strings for Antinna using package:intl.
 class AppLocalizations {
   final String languageCode;
 
-  const AppLocalizations(this.languageCode);
+  AppLocalizations([String? localeCode])
+      : languageCode = localeCode ?? Intl.shortLocale(Intl.defaultLocale ?? 'en');
 
   static AppLocalizations? of(BuildContext context) {
     return context
@@ -12,9 +14,15 @@ class AppLocalizations {
         ?.localizations;
   }
 
-  bool get isSpanish => languageCode == 'es';
+  static Future<AppLocalizations> load(String localeCode) async {
+    final canonical = Intl.canonicalizedLocale(localeCode);
+    Intl.defaultLocale = canonical;
+    return AppLocalizations(canonical);
+  }
 
-  String get appName => 'Antinna';
+  bool get isSpanish => languageCode.startsWith('es');
+
+  String get appName => Intl.message('Antinna', name: 'appName');
 
   String get helloWorld => isSpanish ? '¡Hola Mundo!' : 'Hello World!';
 
@@ -22,14 +30,14 @@ class AppLocalizations {
       isSpanish ? '¡Bienvenido de nuevo, $userName!' : 'Welcome back, $userName!';
 
   String postCount(int count) {
-    if (isSpanish) {
-      if (count == 0) return 'Sin publicaciones';
-      if (count == 1) return '1 publicación';
-      return '$count publicaciones';
-    }
-    if (count == 0) return 'No posts yet';
-    if (count == 1) return '1 post';
-    return '$count posts';
+    return Intl.plural(
+      count,
+      zero: isSpanish ? 'Sin publicaciones' : 'No posts yet',
+      one: isSpanish ? '1 publicación' : '1 post',
+      other: isSpanish ? '$count publicaciones' : '$count posts',
+      name: 'postCount',
+      args: [count],
+    );
   }
 
   String get settingsTitle => isSpanish ? 'Configuración' : 'Settings';
