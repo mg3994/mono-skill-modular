@@ -1,29 +1,28 @@
 name: workspace
-description: A sample command-line application.
+description: Workspace root for BlogStore suite.
 version: 1.0.0
 publish_to: none
-# repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: ^3.14.0-95.2.beta
-workspace:
-  - apps/**
-  - packages/**
+  sdk: '>=3.11.0 <4.0.0'
 
-# Add regular dependencies here.
+workspace:
+  - apps/blogstore
+  - packages/core
+  - packages/domain
+  - packages/infrastructure
+  - packages/l10n
+
 dependencies:
   flutter:
     sdk: flutter
-  
 
 dev_dependencies:
-  build: ^4.0.7
-  build_runner: ^2.15.1
-  build_web_compilers: ^4.8.5
-  drift: ^2.34.4 # this is here because devtools_options.yaml has that extension - drift: true
-  flutter_lints: 
-  kaisel_lint: ^0.5.1
-  
-# Localization generation is configured by the workspace-level l10n.yaml.
+  build: ^4.0.0
+  build_runner: ^2.4.13
+  build_web_compilers: ^4.0.10
+  drift: ^2.24.0
+  flutter_lints: ^6.0.0
+
 flutter:
   generate: true

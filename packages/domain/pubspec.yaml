@@ -1,0 +1,16 @@
+name: domain
+description: Pure Dart business logic layer containing entities, value objects, repository interfaces, and use cases.
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+
+dependencies:
+  core:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

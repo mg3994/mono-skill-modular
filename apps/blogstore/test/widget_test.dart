@@ -1,30 +1,72 @@
-// // This is a basic Flutter widget test.
-// //
-// // To perform an interaction with a widget in your test, use the WidgetTester
-// // utility in the flutter_test package. For example, you can send tap and scroll
-// // gestures. You can also use WidgetTester to find child widgets in the widget
-// // tree, read text, and verify that the values of widget properties are correct.
+import 'package:blogstore/main.dart';
+import 'package:core/core.dart';
+import 'package:domain/domain.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:flutter_test/flutter_test.dart';
+class MockAppearanceRepository implements AppearanceRepository {
+  AppearanceSettingsEntity _settings = const AppearanceSettingsEntity(id: 1);
 
-// import 'package:blogstore/main.dart';
+  @override
+  Future<Result<AppearanceSettingsEntity, Failure>> getSettings(int id) async {
+    return Result.success(_settings);
+  }
 
-// void main() {
-//   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-//     // Build our app and trigger a frame.
-//     await tester.pumpWidget(const MyApp());
+  @override
+  Future<Result<void, Failure>> saveSettings(
+      AppearanceSettingsEntity settings) async {
+    _settings = settings;
+    return Result.success(null);
+  }
 
-//     // Verify that our counter starts at 0.
-//     expect(find.text('0'), findsOneWidget);
-//     expect(find.text('1'), findsNothing);
+  @override
+  Stream<AppearanceSettingsEntity?> watchSettings(int id) async* {
+    yield _settings;
+  }
+}
 
-//     // Tap the '+' icon and trigger a frame.
-//     await tester.tap(find.byIcon(Icons.add));
-//     await tester.pump();
+class MockPostRepository implements PostRepository {
+  @override
+  Future<Result<List<PostEntity>, Failure>> getPosts() async {
+    return Result.success([
+      PostEntity(
+        id: '1',
+        title: 'Modular LEGO Architecture Test',
+        content: 'Testing Clean Arch in BlogStore',
+        authorName: 'Jules',
+        publishedAt: DateTime.now(),
+        readTimeMinutes: 3,
+      ),
+    ]);
+  }
 
-//     // Verify that our counter has incremented.
-//     expect(find.text('0'), findsNothing);
-//     expect(find.text('1'), findsOneWidget);
-//   });
-// }
+  @override
+  Future<Result<PostEntity?, Failure>> getPostById(String id) async {
+    return Result.success(null);
+  }
+}
+
+void main() {
+  testWidgets('BlogStoreApp renders main screen with posts and settings',
+      (WidgetTester tester) async {
+    const config = AppFlavorConfig(
+      flavor: Flavor.development,
+      buildMode: BuildMode.debug,
+    );
+    final appearanceRepo = MockAppearanceRepository();
+    final postRepo = MockPostRepository();
+
+    await tester.pumpWidget(
+      BlogStoreApp(
+        config: config,
+        getAppearanceSettings: GetAppearanceSettings(appearanceRepo),
+        saveAppearanceSettings: SaveAppearanceSettings(appearanceRepo),
+        getPosts: GetPosts(postRepo),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('BlogStore'), findsOneWidget);
+    expect(find.text('Modular LEGO Architecture Test'), findsOneWidget);
+  });
+}

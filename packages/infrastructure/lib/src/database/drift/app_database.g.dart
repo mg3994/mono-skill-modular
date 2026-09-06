@@ -1110,18 +1110,7 @@ class $$AppearanceSettingsTableTableManager
                 securityStorageConsentGranted: securityStorageConsentGranted,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable<$AppearanceSettingsTable, AppearanceSetting>(
-                    table,
-                  ),
-                  BaseReferences<
-                    _$AppDatabase,
-                    $AppearanceSettingsTable,
-                    AppearanceSetting
-                  >(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
         ),

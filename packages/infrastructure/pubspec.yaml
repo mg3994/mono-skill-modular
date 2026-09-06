@@ -1,18 +1,19 @@
 name: infrastructure
-description: A sample command-line application.
+description: Infrastructure package containing persistence models, Drift database, and repository implementations.
 version: 1.0.0
 publish_to: none
-# repository: https://github.com/my_org/my_repo
-resolution: workspace
-environment:
-  sdk: ^3.14.0-95.2.beta
 
-# Add regular dependencies here.
+resolution: workspace
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+
 dependencies:
+  core:
+  domain:
+  drift: ^2.24.0
   drift_flutter: ^0.3.1
   path_provider: ^2.1.6
-  
 
 dev_dependencies:
-  drift_dev: ^2.34.6
-  
+  drift_dev: ^2.24.0

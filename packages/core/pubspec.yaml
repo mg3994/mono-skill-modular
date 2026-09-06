@@ -1,14 +1,13 @@
 name: core
-description: A sample command-line application.
+description: Pure Dart core library containing base types, contracts, and configuration.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
-resolution: workspace
-environment:
-  sdk: ^3.14.0-95.2.beta
+publish_to: none
 
-# Add regular dependencies here.
+resolution: workspace
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+
 dependencies:
- 
 
 dev_dependencies:
-

@@ -1,3 +1,22 @@
 # https://dart.dev/tools/private-files
-# Created by `dart pub`
 .dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+
+# Flutter ignored files
+.flutter-plugins
+.flutter-plugins-dependencies
+*.dill
+*.so
+*.dylib
+*.dll
+
+# IDE / OS files
+.DS_Store
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/

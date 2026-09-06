@@ -1,133 +1,216 @@
+import 'package:core/core.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:infrastructure/infrastructure.dart';
+import 'package:l10n/l10n.dart';
 
-void main() {
-  const String? appFlavor =
-      String.fromEnvironment(
-        'FLUTTER_APP_FLAVOR',
-        defaultValue: 'production',
-      ) //!= ''
-  // ? String.fromEnvironment('FLUTTER_APP_FLAVOR')
-  // : null
-  ;
-  
-  runApp(MyApp(config: appFlavorConfig));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Core Flavor & Build Mode configuration
+  final appFlavorConfig = AppFlavorConfig(
+    flavor: Flavor.fromString(
+      const String.fromEnvironment('FLUTTER_APP_FLAVOR', defaultValue: 'production'),
+    ),
+    buildMode: BuildMode.current,
+  );
+
+  // Initialize Infrastructure & Domain repositories
+  final db = AppDatabase();
+  final appearanceRepo = DriftAppearanceRepository(db);
+  final postRepo = InMemoryPostRepository();
+
+  runApp(
+    BlogStoreApp(
+      config: appFlavorConfig,
+      getAppearanceSettings: GetAppearanceSettings(appearanceRepo),
+      saveAppearanceSettings: SaveAppearanceSettings(appearanceRepo),
+      getPosts: GetPosts(postRepo),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.config});
+class BlogStoreApp extends StatelessWidget {
+  const BlogStoreApp({
+    super.key,
+    required this.config,
+    required this.getAppearanceSettings,
+    required this.saveAppearanceSettings,
+    required this.getPosts,
+  });
 
   final AppFlavorConfig config;
+  final GetAppearanceSettings getAppearanceSettings;
+  final SaveAppearanceSettings saveAppearanceSettings;
+  final GetPosts getPosts;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'BlogStore',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BlogStoreHomePage(
+        config: config,
+        getPosts: getPosts,
+        getAppearanceSettings: getAppearanceSettings,
+        saveAppearanceSettings: saveAppearanceSettings,
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class BlogStoreHomePage extends StatefulWidget {
+  const BlogStoreHomePage({
+    super.key,
+    required this.config,
+    required this.getPosts,
+    required this.getAppearanceSettings,
+    required this.saveAppearanceSettings,
+  });
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  final AppFlavorConfig config;
+  final GetPosts getPosts;
+  final GetAppearanceSettings getAppearanceSettings;
+  final SaveAppearanceSettings saveAppearanceSettings;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<BlogStoreHomePage> createState() => _BlogStoreHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _BlogStoreHomePageState extends State<BlogStoreHomePage> {
+  List<PostEntity> _posts = [];
+  AppearanceSettingsEntity? _settings;
+  bool _isLoading = true;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final postsResult = await widget.getPosts();
+    final settingsResult = await widget.getAppearanceSettings(id: 1);
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _posts = postsResult.valueOrNull ?? [];
+      _settings = settingsResult.valueOrNull ?? const AppearanceSettingsEntity(id: 1);
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _toggleConsent() async {
+    if (_settings == null) return;
+    final updated = _settings!.copyWith(
+      hasGivenConsent: !_settings!.hasGivenConsent,
+    );
+    await widget.saveAppearanceSettings(updated);
+    setState(() {
+      _settings = updated;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
+        title: Text(l10n?.appName ?? 'BlogStore'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Chip(
+              label: Text(
+                '${widget.config.flavor.name.toUpperCase()} (${widget.config.buildMode.name})',
+                style: const TextStyle(fontSize: 12),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n?.welcomeUser('User') ?? 'Welcome!',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          l10n?.postCount(_posts.length) ?? '${_posts.length} posts',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const Divider(),
+                        SwitchListTile(
+                          title: Text(l10n?.settingsPrivacyTitle ?? 'Privacy & Consent'),
+                          subtitle: Text(
+                            _settings?.hasGivenConsent == true
+                                ? 'Consent Granted'
+                                : 'Consent Not Granted',
+                          ),
+                          value: _settings?.hasGivenConsent ?? false,
+                          onChanged: (_) => _toggleConsent(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Latest Articles',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                ..._posts.map(
+                  (post) => Card(
+                    margin: const EdgeInsets.only(bottom: 12.0),
+                    child: ListTile(
+                      title: Text(post.title),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 4),
+                          Text(post.content),
+                          const SizedBox(height: 6),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'By ${post.authorName}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              Text(
+                                l10n?.readingTime(post.readTimeMinutes) ??
+                                    '${post.readTimeMinutes} min read',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }
