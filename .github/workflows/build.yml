@@ -95,11 +95,11 @@ jobs:
 
       - name: Build DartNative APK
         working-directory: apps/antinna
-        run: dn build apk --release
+        run: dn build apk --debug #--release
 
       - name: Build DartNative App Bundle
         working-directory: apps/antinna
-        run: dn build appbundle --release
+        run: dn build appbundle --debug #--release
 
       - name: Collect DartNative artifacts
         working-directory: apps/antinna
